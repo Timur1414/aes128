@@ -200,32 +200,20 @@ def decrypt(text, password):
 
 def main():
     text = input('Enter text:\n')
-    password = input('Enter password:\n')
-    action = input('Encrypt (1) or Decrypt (2)?\n')
+    key = input('Enter key:\n')
+    initialization_vector = input('Enter initialization vector:\n')
     text = [ord(i) for i in text]
-    password = [ord(i) for i in password]
-    if 0 < len(text) < 16:  # добавление до 16 байт
-        empty_spaces = 16 - len(text)
+    key = [ord(i) for i in key]
+    initialization_vector = [ord(i) for i in initialization_vector]
+    text_blocks = []
+    for i in range(0, len(text), 16):
+        text_blocks.append(text[i:i + 16])
+    if len(text_blocks[-1]) < 16:
+        empty_spaces = 16 - len(text_blocks[-1])
         for i in range(empty_spaces - 1):
-            text += [0]
-        text += [1]
-    else:
-        exit(1)
-    if action == '1':
-        encrypted_data = encrypt(text, password)
-        encrypted_text = ''.join([chr(i) for i in encrypted_data if i >= 32])
-        print(f'encrypted_text: {encrypted_text}')
-        with open('encrypted.txt', 'w', encoding='utf-8') as f:
-            f.write(''.join([chr(i) for i in encrypted_data]))
-    else:
-        with open('encrypted.txt', 'r', encoding='utf-8') as f:
-            text = f.read()
-        text = [ord(i) for i in text]
-        decrypted_data = decrypt(text, password)
-        decrypted_text = ''.join([chr(i) for i in decrypted_data if i >= 32])
-        print(f'decrypted_text: {decrypted_text}')
-        with open('decrypted.txt', 'w', encoding='utf-8') as f:
-            f.write(decrypted_text)
+            text_blocks[-1].append(0)
+        text_blocks[-1].append(1)
+    print(text_blocks)
 
 
 if __name__ == '__main__':
