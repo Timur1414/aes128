@@ -199,9 +199,11 @@ def decrypt(text, password):
 
 
 def main():
-    print('text: 123    pass: 123')
-    text = [ord(i) for i in '123']
-    password = [ord(i) for i in '123']
+    text = input('Enter text:\n')
+    password = input('Enter password:\n')
+    action = input('Encrypt (1) or Decrypt (2)?\n')
+    text = [ord(i) for i in text]
+    password = [ord(i) for i in password]
     if 0 < len(text) < 16:  # добавление до 16 байт
         empty_spaces = 16 - len(text)
         for i in range(empty_spaces - 1):
@@ -209,12 +211,21 @@ def main():
         text += [1]
     else:
         exit(1)
-    encrypted_data = encrypt(text, password)
-    encrypted_text = ''.join([chr(i) for i in encrypted_data if i >= 32])
-    print(f'encrypted_text: {encrypted_text}')
-    decrypted_data = decrypt(encrypted_data, password)
-    decrypted_text = ''.join([chr(i) for i in decrypted_data if i >= 32])
-    print(f'decrypted_text: {decrypted_text}')
+    if action == '1':
+        encrypted_data = encrypt(text, password)
+        encrypted_text = ''.join([chr(i) for i in encrypted_data if i >= 32])
+        print(f'encrypted_text: {encrypted_text}')
+        with open('encrypted.txt', 'w', encoding='utf-8') as f:
+            f.write(''.join([chr(i) for i in encrypted_data]))
+    else:
+        with open('encrypted.txt', 'r', encoding='utf-8') as f:
+            text = f.read()
+        text = [ord(i) for i in text]
+        decrypted_data = decrypt(text, password)
+        decrypted_text = ''.join([chr(i) for i in decrypted_data if i >= 32])
+        print(f'decrypted_text: {decrypted_text}')
+        with open('decrypted.txt', 'w', encoding='utf-8') as f:
+            f.write(decrypted_text)
 
 
 if __name__ == '__main__':
