@@ -205,15 +205,30 @@ def main():
     text = [ord(i) for i in text]
     key = [ord(i) for i in key]
     initialization_vector = [ord(i) for i in initialization_vector]
-    text_blocks = []
-    for i in range(0, len(text), 16):
-        text_blocks.append(text[i:i + 16])
-    if len(text_blocks[-1]) < 16:
-        empty_spaces = 16 - len(text_blocks[-1])
-        for i in range(empty_spaces - 1):
-            text_blocks[-1].append(0)
-        text_blocks[-1].append(1)
-    print(text_blocks)
+    # text_blocks = []
+    # for i in range(0, len(text), 16):
+    #     text_blocks.append(text[i:i + 16])
+    # if len(text_blocks[-1]) < 16:
+    #     empty_spaces = 16 - len(text_blocks[-1])
+    #     for i in range(empty_spaces - 1):
+    #         text_blocks[-1].append(0)
+    #     text_blocks[-1].append(1)
+    # encrypted_data = []
+    # for block in text_blocks:
+    #     encrypted_data.extend(encrypt(block, key))
+    # with open('encrypted_data.txt', 'w', encoding='utf-8') as f:
+    #     f.write(''.join([chr(i) for i in encrypted_data]))
+    data = ''
+    with open('encrypted_data.txt', 'r', encoding='utf-8') as f:
+        data = f.read()
+    data = [ord(i) for i in data]
+    data_blocks = []
+    for i in range(0, len(data), 16):
+        data_blocks.append(data[i:i + 16])
+    decrypted_data = []
+    for block in data_blocks:
+        decrypted_data.extend(decrypt(block, key))
+    print(*[chr(i) for i in decrypted_data if i >= 32], sep='')
 
 
 if __name__ == '__main__':
